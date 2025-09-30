@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login | Bater Ponto</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #eee;
+    }
+
+    #container {
+      width: 420px;
+      background: #121212;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+      overflow: hidden;
+      transition: all 0.5s ease;
+    }
+
+    /* --- Login Screen --- */
+    #loginScreen {
+      padding: 40px 30px;
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    #loginScreen h2 {
+      font-weight: 600;
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      color: #00d2ff;
+      text-align: center;
+      letter-spacing: 1.2px;
+      text-shadow: 0 0 6px #00d2ff88;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: #aaa;
+    }
+
+    input[type="text"], input[type="password"] {
+      padding: 14px 18px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      background: #222;
+      color: #eee;
+      margin-bottom: 20px;
+      transition: box-shadow 0.3s ease;
+      box-shadow: inset 0 0 8px #111;
+    }
+
+    input[type="text"]:focus, input[type="password"]:focus {
+      outline: none;
+      box-shadow: 0 0 12px #00d2ff;
+      background: #222e3b;
+      color: #fff;
+    }
+
+    button {
+      background: #00d2ff;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #121212;
+      cursor: pointer;
+      box-shadow: 0 0 12px #00d2ffaa;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      letter-spacing: 1.1px;
+    }
+
+    button:hover {
+      background: #00f0ff;
+      box-shadow: 0 0 20px #00f0ffdd;
+    }
+
+    .error-message {
+      color: #ff5555;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      text-align: center;
+      display: none;
+    }
+
+    /* --- Main App --- */
+    #appScreen {
+      padding: 30px 40px;
+      display: none;
+      flex-direction: column;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    #appScreen h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-weight: 700;
+      letter-spacing: 1.3px;
+      color: #00d2ff;
+      text-shadow: 0 0 8px #00d2ffbb;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #bbb;
+    }
+
+    select, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: none;
+      background: #222;
+      color: #eee;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+
+    select:focus, input[type="text"]:focus, input[type="number"]:focus {
+      outline: none;
+      background: #28343f;
+      box-shadow: 0 0 10px #00d2ff88;
+      color: #fff;
+    }
+
+    button#submitBtn {
+      background: #00d2ff;
+      border: none;
+      padding: 14px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 10px;
+      color: #121212;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 0 12px #00d2ffaa;
+    }
+    button#submitBtn:hover {
+      background: #00f0ff;
+      box-shadow: 0 0 20px #00f0ffdd;
+    }
+
+    .error {
+      color: #ff5252;
+      font-size: 0.9rem;
+      margin-top: -15px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .success {
+      color: #4caf50;
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-align: center;
+      display: none;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      #container {
+        width: 90%;
+        padding: 20px;
+      }
+      #appScreen {
+        padding: 20px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+
+  <!-- Tela Login -->
+  <section id="loginScreen">
+    <h2>Login do Sistema</h2>
+    <div class="error-message" id="loginError">Usuário ou senha inválidos</div>
+    <label for="userInput">Usuário</label>
+    <input type="text" id="userInput" placeholder="Digite seu usuário" autocomplete="username" />
+    <label for="passInput">Senha</label>
+    <input type="password" id="passInput" placeholder="Digite sua senha" autocomplete="current-password" />
+    <button id="loginBtn">Entrar</button>
+  </section>
+
+  <!-- Tela App -->
+  <section id="appScreen" aria-hidden="true">
+    <h1>Bater Ponto</h1>
+    <form id="pontoForm" autocomplete="off" novalidate>
+      <label for="nome">Nome:</label>
+      <select id="nome" required>
+        <option value="" disabled selected>Selecione seu nome</option>
+      </select>
+
+      <label for="cpfDigitos">Informe os 4 últimos dígitos do CPF:</label>
+      <input type="text" id="cpfDigitos" maxlength="4" placeholder="Ex: 1234" required />
+      <div id="cpfError" class="error">CPF incorreto, verifique os últimos 4 dígitos.</div>
+
+      <label for="area">Área:</label>
+      <select id="area" required>
+        <option value="" disabled selected>Selecione a área</option>
+        <option>Marcenaria Estrutural</option>
+        <option>Marcenaria Móvel</option>
+        <option>Elétrica</option>
+        <option>Piso</option>
+        <option>Hidráulica</option>
+        <option>Outro</option>
+      </select>
+
+      <label for="projeto">Projeto:</label>
+      <select id="projeto" required>
+        <option value="" disabled selected>Selecione o projeto</option>
+        <option>CDS</option>
+        <option>VDS</option>
+        <option>ODS</option>
+        <option>TDS</option>
+        <option>BDS</option>
+        <option>TELM</option>
+        <option>TOT</option>
+        <option>FÁBRICA</option>
+        <option>LOGÍSTICA</option>
+        <option>EXTERNO</option>
+      </select>
+
+      <label for="numProjeto">Número do Projeto:</label>
+      <input type="text" id="numProjeto" placeholder="Ex: 13" required />
+
+      <label for="inicio">Início da atividade:</label>
+      <select id="inicio" required></select>
+
+      <label for="fim">Término da atividade:</label>
+      <select id="fim" required></select>
+
+      <div class="success" id="horasRestantes"></div>
+
+      <button type="submit" id="submitBtn">Enviar</button>
+    </form>
+  </section>
+
+</div>
+
+<script>
+  // Usuário e senha hardcoded
+  const USER = "geral";
+  const PASS = "usuario";
+
+  const loginScreen = document.getElementById('loginScreen');
+  const appScreen = document.getElementById('appScreen');
+  const loginBtn = document.getElementById('loginBtn');
+  const userInput = document.getElementById('userInput');
+  const passInput = document.getElementById('passInput');
+  const loginError = document.getElementById('loginError');
+
+  const nomeSelect = document.getElementById("nome");
+  const cpfInput = document.getElementById("cpfDigitos");
+  const cpfError = document.getElementById("cpfError");
+  const areaSelect = document.getElementById("area");
+  const projetoSelect = document.getElementById("projeto");
+  const numProjetoInput = document.getElementById("numProjeto");
+  const inicioSelect = document.getElementById("inicio");
+  const fimSelect = document.getElementById("fim");
+  const horasRestantesDiv = document.getElementById("horasRestantes");
+  const form = document.getElementById("pontoForm");
+
+  // Lista dos funcionários e seus CPFs (últimos 4 dígitos fictícios para validação)
+  const funcionarios = [
+    { nome: "BRUNO GOMES DA SILA", cpf: "5885" },
+    { nome: "JOSÉ ADRIANO DE SIQUEIRA ARAÚJO", cpf: "1851" },
+    { nome: "MANUEL PEREIRA ALENCAR JUNIOR", cpf: "1332" },
+    { nome: "NEUSVALDO NOVAIS RODRIGUES", cpf: "4627" },
+    { nome: "RONALDO GONCALVES DA SILVA", cpf: "2630" },
+    { nome: "TIAGO FELIPE DOS SANTOS COELHO", cpf: "2875" },
+    { nome: "TERCEIRO", cpf: "0000" },
+    { nome: "DENILSON DE SOUZA SANTOS", cpf: "3011" },
+    { nome: "FELIPE DE LIMA PEREIRA", cpf: "5612" },
+    { nome: "JOSE CARLOS FIGUEIRA DA SILVA", cpf: "9902" },
+    { nome: "JOSE GENILSOS MARTINS SOARES", cpf: "4758" },
+    { nome: "NETANIS DOS SANTOS", cpf: "1899" },
+    { nome: "THIAGO PACHECO ALMEIDA", cpf: "7410" },
+    { nome: "ROBERTO CARLOS DA SILVA", cpf: "9876" },
+    { nome: "WESLEY ALEKSANDER ALCANTIDA SILVA", cpf: "3344" },
+    { nome: "VALDEMIR GOMES JUNIOR", cpf: "3855" },
+  ];
+
+  // Função para popular select dos nomes
+  function popularNomes() {
+    funcionarios.forEach(f => {
+      const option = document.createElement("option");
+      option.value = f.nome;
+      option.textContent = f.nome;
+      nomeSelect.appendChild(option);
+    });
+  }
+
+  // Função para popular select dos horários em 15 min de intervalo (06:00 até 22:45)
+  function popularHorarios() {
+    inicioSelect.innerHTML = "";
+    fimSelect.innerHTML = "";
+    const start = 6 * 60;  // minutos desde 00:00 (6h = 360min)
+    const end = 22 * 60 + 45; // 22:45
+
+    for (let min = start; min <= end; min += 15) {
+      const hora = Math.floor(min / 60);
+      const minuto = min % 60;
+      const texto = `${hora.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
+
+      let optionInicio = document.createElement("option");
+      optionInicio.value = texto;
+      optionInicio.textContent = texto;
+      inicioSelect.appendChild(optionInicio);
+
+      let optionFim = document.createElement("option");
+      optionFim.value = texto;
+      optionFim.textContent = texto;
+      fimSelect.appendChild(optionFim);
+    }
+  }
+
+  // Função para calcular a diferença entre horários em minutos
+  function calcularDiferenca(horaInicio, horaFim) {
+    const [hi, mi] = horaInicio.split(":").map(Number);
+    const [hf, mf] = horaFim.split(":").map(Number);
+    const inicio = hi * 60 + mi;
+    const fim = hf * 60 + mf;
+    return fim - inicio;
+  }
+
+  // Função para validar CPF (apenas últimos 4 dígitos)
+  function validarCPF(nomeSelecionado, cpfDigitado) {
+    const func = funcionarios.find(f => f.nome === nomeSelecionado);
+    if (!func) return false;
+    return func.cpf === cpfDigitado;
+  }
+
+  // Evento de login
+  loginBtn.addEventListener("click", () => {
+    const user = userInput.value.trim();
+    const pass = passInput.value.trim();
+    if (user.toLowerCase() === USER && pass === PASS) {
+      loginError.style.display = "none";
+      loginScreen.style.display = "none";
+      appScreen.style.display = "flex";
+      appScreen.setAttribute("aria-hidden", "false");
+      popularNomes();
+      popularHorarios();
+    } else {
+      loginError.style.display = "block";
+    }
+  });
+
+  // Validação do formulário e cálculo de horas
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    cpfError.style.display = "none";
+    horasRestantesDiv.style.display = "none";
+
+    const nomeSelecionado = nomeSelect.value;
+    const cpfDigitado = cpfInput.value.trim();
+    const areaSelecionada = areaSelect.value;
+    const projetoSelecionado = projetoSelect.value;
+    const numProjeto = numProjetoInput.value.trim();
+    const inicioAtividade = inicioSelect.value;
+    const fimAtividade = fimSelect.value;
+
+    // Validação básica
+    if (!nomeSelecionado || !cpfDigitado || !areaSelecionada || !projetoSelecionado || !numProjeto || !inicioAtividade || !fimAtividade) {
+      alert("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    // Validar CPF
+    if (!validarCPF(nomeSelecionado, cpfDigitado)) {
+      cpfError.style.display = "block";
+      return;
+    }
+
+    // Validar horário início < fim
+    if (calcularDiferenca(inicioAtividade, fimAtividade) <= 0) {
+      alert("O horário de início deve ser antes do horário de término.");
+      return;
+    }
+
+    // Calcular horas trabalhadas
+    const diffMinutos = calcularDiferenca(inicioAtividade, fimAtividade);
+    const horasTrabalhadas = (diffMinutos / 60).toFixed(2);
+
+    // Calcular horas restantes (considerando 44h semanais)
+    // Simplesmente mostramos as horas trabalhadas do dia.
+    horasRestantesDiv.textContent = `Horas trabalhadas hoje: ${horasTrabalhadas}h`;
+    horasRestantesDiv.style.display = "block";
+
+    // Aqui você pode enviar os dados para um servidor, armazenar localmente, etc.
+    alert("Ponto registrado com sucesso!");
+
+    // Resetar formulário mantendo nome selecionado (opcional)
+    //form.reset();
+    cpfInput.value = "";
+    areaSelect.selectedIndex = 0;
+    projetoSelect.selectedIndex = 0;
+    numProjetoInput.value = "";
+    inicioSelect.selectedIndex = 0;
+    fimSelect.selectedIndex = 0;
+    horasRestantesDiv.style.display = "none";
+  });
+</script>
+
+</body>
+</html>
